@@ -1,0 +1,32 @@
+services:
+  php-fpm:
+    #image: php:8.4-fpm
+    image: pingcrm-php-fpm
+    networks:
+      - app-network
+    environment:
+      APP_KEY: base64:slBwwE6jbHjJSLHAlWbVvm9WUeqJrAQO/QaMrbdfcuA=
+
+  nginx:
+    #image: nginx:alpine
+    image: pingcrm-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - php-fpm
+    networks:
+      - app-network
+    environment:
+      - USE_LOCALHOST=false  # Docker Compose では php-fpm:9000 にする
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ "$USE_LOCALHOST" = "true" ]; then
+          sed -i 's/fastcgi_pass   php-fpm:9000;/fastcgi_pass   127.0.0.1:9000;/g' /etc/nginx/conf.d/default.conf;
+        else
+          sed -i 's/fastcgi_pass   127.0.0.1:9000;/fastcgi_pass   php-fpm:9000;/g' /etc/nginx/conf.d/default.conf;
+        fi
+        nginx -g 'daemon off;'
+
+networks:
+  app-network:

@@ -1,0 +1,4 @@
+pingcrm/.env
+pingcrm/vendor/
+pingcrm/node_modules/
+pingcrm/public/build/
