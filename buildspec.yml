@@ -9,4 +9,3 @@ phases:
       - echo Logging in to Amazon ECR...
       - export ECR_REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/pingcrm"
       - echo "ECR Repository: $ECR_REPOSITORY"
-
