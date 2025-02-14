@@ -5,3 +5,5 @@ phases:
     commands:
       - echo "Fetching AWS Account ID..."
       - "export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query \"Account\" --output text)"
+      - "export ECR_REPOSITORY=\"${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/pingcrm\""
+      - echo "$ECR_REPOSITORY"
