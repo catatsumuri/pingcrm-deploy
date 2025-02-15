@@ -8,6 +8,8 @@ phases:
       - "export ECR_REPOSITORY=\"${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/pingcrm\""
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
+      - echo "Initializing git submodules..."
+      - git submodule update --init --recursive
 
   build:
     commands:
