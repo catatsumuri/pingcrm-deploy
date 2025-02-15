@@ -33,7 +33,7 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:$COMMIT_HASH
       - echo "Writing image definitions file..."
-      - echo test > imagedefinisions.json
+      - echo '[{"name":"pingcrm","imageUri":"%s"},{"name":"pingcrm-nginx","imageUri":"%s"}]' > imagedefinitions.json
       - cat imagedefinitions.json
         #      - printf '[{"name":"pingcrm","imageUri":"%s"},{"name":"pingcrm-nginx","imageUri":"%s"}]' \
         #  "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH" \
