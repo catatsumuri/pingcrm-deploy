@@ -37,10 +37,6 @@ phases:
           "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH" \
           "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:$COMMIT_HASH" \
           > imagedefinitions.json
-      - printf '[{"name":"pingcrm","imageUri":"%s"},{"name":"pingcrm-nginx","imageUri":"%s"}]\n' \
-          "$(echo -n $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH)" \
-          "$(echo -n $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:$COMMIT_HASH)" \
-          > imagedefinitions.json
       - cat imagedefinitions.json
 
 artifacts:
