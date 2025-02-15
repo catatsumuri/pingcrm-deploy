@@ -1,7 +1,7 @@
 # --------------------------------------
 # Stage 1: frontend build stage
 # --------------------------------------
-FROM node:18-alpine AS frontend-builder
+FROM public.ecr.aws/docker/library/node:18-alpine AS frontend-builder
 
 WORKDIR /laravel
 
@@ -13,7 +13,7 @@ RUN mkdir /public && cp -a public/* /public
 # --------------------------------------
 # Stage 2: PHP-FPM
 # --------------------------------------
-FROM php:8.4-fpm AS php-fpm
+FROM public.ecr.aws/docker/library/php:8.4-fpm AS php-fpm
 
 WORKDIR /srv
 
@@ -46,7 +46,7 @@ EXPOSE 9000
 # --------------------------------------
 # Stage 3: Nginx
 # --------------------------------------
-FROM nginx:alpine AS nginx
+FROM public.ecr.aws/nginx/nginx:latest AS nginx
 
 WORKDIR /usr/share/nginx/html
 
