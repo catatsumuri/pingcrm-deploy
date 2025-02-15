@@ -13,15 +13,14 @@ phases:
 
   build:
     commands:
-      echo $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
-      #      - echo "Building Docker images..."
-      #      - docker build -t pingcrm-php-fpm -f ./srv/Dockerfile --target=php-fpm .
-      #      - docker build -t pingcrm-nginx -f ./srv/Dockerfile --target=nginx .
-      #      - docker tag pingcrm-php-fpm $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
-      #      - docker tag pingcrm-nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:latest
+      - echo "Building Docker images..."
+      - docker build -t pingcrm-php-fpm -f ./srv/Dockerfile --target=php-fpm .
+      - docker build -t pingcrm-nginx -f ./srv/Dockerfile --target=nginx .
+      - docker tag pingcrm-php-fpm $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
+      - docker tag pingcrm-nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:latest
 
-        #  post_build:
-        #    commands:
-        #      - echo "Pushing Docker images to ECR..."
-        #      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
-        #      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:latest
+  post_build:
+    commands:
+      - echo "Pushing Docker images to ECR..."
+      - docker push $ECR_REPOSITORY/pingcrm-php-fpm:latest
+      - docker push $ECR_REPOSITORY/pingcrm-nginx:latest
