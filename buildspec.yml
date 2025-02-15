@@ -8,7 +8,6 @@ phases:
       - export AWS_REGION="ap-northeast-1"
       - export ECR_REPOSITORY="practice"
       - export COMMIT_HASH=$(git rev-parse --short HEAD)
-      - echo "Commit Hash: $COMMIT_HASH"
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - echo "Initializing git submodules..."
