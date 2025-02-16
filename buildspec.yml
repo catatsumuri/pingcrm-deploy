@@ -7,9 +7,9 @@ phases:
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
       - export AWS_REGION="ap-northeast-1"
       - export ECR_REPOSITORY="practice"
-      - export COMMIT_HASH=$(git rev-parse --short HEAD)
+      - export ECR_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY"
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
       - echo "Initializing git submodules..."
       - git submodule update --init --recursive
 
@@ -19,24 +19,12 @@ phases:
       - docker build -t pingcrm-php-fpm -f ./srv/Dockerfile --target=php-fpm .
       - docker build -t pingcrm-nginx -f ./srv/Dockerfile --target=nginx .
 
-      - docker tag pingcrm-php-fpm $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
-      - docker tag pingcrm-nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:latest
-
-      - docker tag pingcrm-php-fpm $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH
-      - docker tag pingcrm-nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:$COMMIT_HASH
+      - docker tag pingcrm-php-fpm $ECR_URI/pingcrm-php-fpm:latest
+      - docker tag pingcrm-nginx $ECR_URI/pingcrm-nginx:latest
 
   post_build:
     commands:
       - echo "Pushing Docker images to ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:latest
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:latest
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-nginx:$COMMIT_HASH
-      - echo "Writing image definitions file..."
-      - printf '[{"name":"pingcrm","imageUri":"%s"},{"name":"pingcrm-nginx","imageUri":"%s"}]' "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH" "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY/pingcrm-php-fpm:$COMMIT_HASH" > imagedefinitions.json
-      - cat imagedefinitions.json
-
-artifacts:
-  files:
-    - imagedefinitions.json
+      - docker push $ECR_URI/pingcrm-php-fpm:latest
+      - docker push $ECR_URI/pingcrm-nginx:latest
 
